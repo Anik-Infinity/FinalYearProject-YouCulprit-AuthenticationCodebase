@@ -14,9 +14,9 @@ const userSchema = mongoose.Schema({
         required: true,
         unique: true,
         trim: true,
-        minlength:11,
+        minlength: 11,
         validate(value) {
-            if(!validator.isMobilePhone(value)) {
+            if (!validator.isMobilePhone(value)) {
                 throw new Error('Phone number not valid')
             }
         }
@@ -38,15 +38,15 @@ const userSchema = mongoose.Schema({
     }]
 })
 
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function (next) {
     const user = this
-    if(user.isModified('password')) {
+    if (user.isModified('password')) {
         user.password = await bcrypt.hash(user.password, 8)
     }
     next()
 })
 
-userSchema.methods.toJSON = function() {
+userSchema.methods.toJSON = function () {
     const user = this
     const userObject = user.toObject()
 
@@ -57,7 +57,7 @@ userSchema.methods.toJSON = function() {
     return userObject
 }
 
-userSchema.methods.generateAuthToken = async function() {
+userSchema.methods.generateAuthToken = async function () {
     const user = this
     const token = jwt.sign({ _id: user._id.toString() }, 'thisismysign')
     user.tokens = user.tokens.concat({ token })
@@ -67,11 +67,11 @@ userSchema.methods.generateAuthToken = async function() {
 
 userSchema.statics.findByCredentials = async (phone, password) => {
     const user = await User.findOne({ phone })
-    if(!user) {
+    if (!user) {
         throw new Error('Unable to logIn!')
     }
     const isMatch = await bcrypt.compare(password, user.password)
-    if(!isMatch) {
+    if (!isMatch) {
         throw new Error('Unable to logIn!')
     }
     return user

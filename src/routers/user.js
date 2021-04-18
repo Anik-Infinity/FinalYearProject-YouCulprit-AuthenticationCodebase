@@ -6,15 +6,15 @@ const print = console.log
 
 // User Registration
 router.post('/user-create', async (req, res) => {
-    
+
     const user = new User(req.body)
     try {
         await user.save()
         //const token = await user.generateAuthToken()
-        res.status(201).send({message:'Registration Completed. you can login now', error:''})
+        res.status(201).send({ message: 'Registration Completed. you can login now', error: '' })
         print(user)
     } catch (e) {
-        res.status(400).send({error: 'Something went wrong. Please try agnain later!'})
+        res.status(400).send({ error: 'Something went wrong. Please try agnain later!' })
         print(e)
     }
 })
@@ -24,9 +24,9 @@ router.post('/user-login', async (req, res) => {
     try {
         const user = await User.findByCredentials(req.body.phone, req.body.password)
         const token = await user.generateAuthToken()
-        res.send({ user, token, error:'' })
-    } catch(e) {
-        res.status(400).send({error: 'Something went wrong. Please try agnain later!'})
+        res.send({ user, token, error: '' })
+    } catch (e) {
+        res.status(400).send({ error: 'Something went wrong. Please try agnain later!' })
     }
 })
 
@@ -37,9 +37,9 @@ router.post('/user-logout', auth, async (req, res) => {
             return token.token != req.token
         })
         await req.user.save()
-        res.send({message: 'logout successfully'})
-    } catch(e) {
-        res.status(400).send({error: 'Something went wrong. Please try agnain later!'})
+        res.send({ message: 'logout successfully' })
+    } catch (e) {
+        res.status(400).send({ error: 'Something went wrong. Please try agnain later!' })
     }
 })
 
@@ -47,8 +47,8 @@ router.post('/user-logout', auth, async (req, res) => {
 router.get('/user-profile', auth, async (req, res) => {
     try {
         res.send(req.user)
-    } catch(e) {
-        res.status(400).send({error: 'Something went wrong. Please try agnain later!'})
+    } catch (e) {
+        res.status(400).send({ error: 'Something went wrong. Please try agnain later!' })
     }
 })
 
